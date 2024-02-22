@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="signup.css">
+    <title>Signup</title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function validateForm() {
+            var name = document.getElementById('user').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('pass').value;
+            var confirmPassword = document.getElementById('pass-confirm').value;
+
+            // Reset previous error messages
+            document.getElementById('nameError').innerText = '';
+            document.getElementById('emailError').innerText = '';
+            document.getElementById('passwordError').innerText = '';
+            document.getElementById('confirmPasswordError').innerText = '';
+
+            // Validate name (allow only letters and spaces)
+            if (!name.trim()) {
+                document.getElementById('nameError').innerText = 'Name is required';
+                return false;
+            }
+
+            if (!/^[a-zA-Z\s]+$/.test(name)) {
+                document.getElementById('nameError').innerText = 'Name should only contain letters and spaces';
+                return false;
+            }
+
+            // Validate email format
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.trim()) {
+                document.getElementById('emailError').innerText = 'Email is required';
+                return false;
+            }
+
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').innerText = 'Invalid email format';
+                return false;
+            }
+
+            // Validate password
+            if (!password.trim()) {
+                document.getElementById('passwordError').innerText = 'Password is required';
+                return false;
+            }
+
+            // Validate confirm password
+            if (!confirmPassword.trim()) {
+                document.getElementById('confirmPasswordError').innerText = 'Confirm Password is required';
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').innerText = 'Passwords do not match';
+                return false;
+            }
+
+            // Continue with form submission if all validations pass
+            return true;
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li id="home-link"><a href="dashboard">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="login">Login</a></li>
+        <li><a href="signup">SignUp</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="login-wrap">
+        <div class="login-html">
+            <div class="login-form">
+                <div class="sign-up-htm">
+                    <h1 style="color: #fff;">Welcome to SignUp Page</h1>
+                    <form th:action="@{/signup}" method="post" th:object="${user}" onsubmit="return validateForm()">
+                        <div class="group">
+                            <label for="user" class="label">Name</label>
+                            <input id="user" th:field="*{name}" type="text" class="input" required pattern="[a-zA-Z\s]+" title="Name should only contain letters and spaces">
+                            <span id="nameError" style="color: red;"></span>
+                        </div>
+                        <div class="group">
+                            <label for="email" class="label">Email</label>
+                            <input id="email" th:field="*{email}" type="email" class="input" required>
+                            <span id="emailError" style="color: red;"></span>
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">Password</label>
+                            <input id="pass" th:field="*{password}" type="password" class="input" data-type="password" required>
+                            <span id="passwordError" style="color: red;"></span>
+                        </div>
+                        <div class="group">
+                            <label for="pass-confirm" class="label">Confirm Password</label>
+                            <input id="pass-confirm" type="password" class="input" data-type="password" required>
+                            <span id="confirmPasswordError" style="color: red;"></span>
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="Sign Up">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="signup.js"></script>
+</body>
+</html>

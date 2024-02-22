@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Panel</title>
+</head>
+<body>
+
+<h2>Welcome to the Admin Panel</h2>
+
+
+<!-- Add Word Form -->
+<form method="post" action="/panel/addWord">
+  <label for="word">Word:</label>
+  <input type="text" id="word" name="word" required>
+  <label for="hints">Hints:</label>
+  <input type="text" id="hints" name="hints" required>
+  <label for="level">Level:</label>
+  <select id="level" name="level" required>
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="difficult">Difficult</option>
+  </select>
+  <button type="submit">Add Word</button>
+</form>
+
+
+<!-- Word List -->
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Word</th>
+    <th>Hints</th>
+    <th>Level</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- Display Words from the Database -->
+  <tr th:each="word : ${words}">
+    <td th:text="${word.id}"></td>
+    <td th:text="${word.word}"></td>
+    <td th:text="${word.hints}"></td>
+    <td th:text="${word.level}"></td>
+    <td>
+      <a th:href="@{'/panel/words/' + ${word.id}}">View</a>
+      <a th:href="@{'/panel/updateWord/' + ${word.id}}">Edit</a>
+      <a th:href="@{'/panel/deleteWord/' + ${word.id}}">Delete</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- Update Word Form -->
+<form method="post" action="/panel/updateWord">
+  <label for="updateWordId">Word ID to Update:</label>
+  <input type="number" id="updateWordId" name="updateWordId" required>
+  <label for="newWord">New Word:</label>
+  <input type="text" id="newWord" name="newWord" required>
+  <label for="newHints">New Hints:</label>
+  <input type="text" id="newHints" name="newHints" required>
+  <label for="newLevel">New Level:</label>
+  <select id="newLevel" name="newLevel" required>
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="difficult">Difficult</option>
+  </select>
+  <button type="submit">Update Word</button>
+</form>
+
+<!-- Delete Word Form -->
+<form method="post" action="/panel/deleteWord">
+  <label for="deleteWordId">Word ID to Delete:</label>
+  <input type="number" id="deleteWordId" name="deleteWordId" required>
+  <button type="submit">Delete Word</button>
+</form>
+
+<!-- Other Content for the Admin Panel -->
+
+</body>
+</html>

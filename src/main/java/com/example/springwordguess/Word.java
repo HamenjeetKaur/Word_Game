@@ -10,7 +10,6 @@ public class Word {
     private String hint;
     private String level;
 
-
     public Long getId() {
         return id;
     }
