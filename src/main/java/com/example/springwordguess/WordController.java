@@ -16,14 +16,8 @@ public class WordController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/game")
-    public String showForm(Model model) {
-        model.addAttribute("levels", new String[]{"Easy", "Medium", "Hard"});
-        model.addAttribute("selectedLevel", "");
-        return "wordForm";
-    }
 
-    @PostMapping("/word")
+    @PostMapping("/game")
     public String getWord(@ModelAttribute("selectedLevel") String selectedLevel, Model model, HttpSession session) {
         Word word = wordRepository.findRandomWordByLevel(selectedLevel);
         model.addAttribute("word", word);
@@ -47,22 +41,29 @@ public class WordController {
     }
 
 
-
-    // Add a new word
     @PostMapping("/panel/addWord")
-    public String addWord(@ModelAttribute Word newWord) {
+    public String addWord(@RequestParam String word, @RequestParam String hint, @RequestParam String level) {
+        Word newWord = new Word();
+        newWord.setWord(word);
+        newWord.setHint(hint);
+        newWord.setLevel(level);
         wordRepository.save(newWord);
         return "redirect:/panel/words";
     }
 
-    // Update an existing word
+
     @PostMapping("/panel/updateWord")
-    public String updateWord(@ModelAttribute Word updatedWord) {
-        wordRepository.save(updatedWord);
+    public String updateWord(@RequestParam Long updateWordId, @RequestParam String newWord, @RequestParam String newHint, @RequestParam String newLevel) {
+        Word existingWord = wordRepository.findById(updateWordId).orElse(null);
+        if (existingWord != null) {
+            existingWord.setWord(newWord);
+            existingWord.setHint(newHint);
+            existingWord.setLevel(newLevel);
+            wordRepository.save(existingWord);
+        }
         return "redirect:/panel/words";
     }
 
-    // Delete an existing word
     @PostMapping("/panel/deleteWord")
     public String deleteWord(@RequestParam Long deleteWordId) {
         wordRepository.deleteById(deleteWordId);
@@ -76,7 +77,7 @@ public class WordController {
         int chancesLeft = (int) session.getAttribute("chancesLeft");
         model.addAttribute("GivenHints", wordarray.getHint());
         if (word != null && wordarray.getWord().equalsIgnoreCase(word)) {
-            model.addAttribute("message", "Congratulations! You win");
+            model.addAttribute("message", "Congratulations! You win. Check your Score at HomePage.");
             session.removeAttribute("chancesLeft");
             User user = (User) session.getAttribute("user");
 
@@ -90,10 +91,11 @@ public class WordController {
         } else {
             chancesLeft--;
             if (chancesLeft == 0) {
-                model.addAttribute("message", "Sorry! You Lose.");
+                model.addAttribute("message", "Sorry! You Lose. Check your Score at HomePage.");
                 session.removeAttribute("chancesLeft");
+                return "wordInput";
             } else {
-                model.addAttribute("message", "Please Try again. Chances left: " + chancesLeft);
+                model.addAttribute("mess", "Please Try again. Chances left: " + chancesLeft);
                 session.setAttribute("chancesLeft", chancesLeft);
             }
             return "wordInput";

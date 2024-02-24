@@ -13,7 +13,7 @@ public class UserService {
             user.setScore(newScore);
             userRepository.save(user);
         } else {
-// Handle user not found scenario
+
         }
     }
 }

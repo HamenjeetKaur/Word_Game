@@ -23,10 +23,12 @@ public class WordService {
     }
 
     public void addWord(Word word) {
+
         wordRepository.save(word);
     }
 
     public void updateWord(Word updatedWord) {
+
         wordRepository.save(updatedWord);
     }
 

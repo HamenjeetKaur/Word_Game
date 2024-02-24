@@ -1,81 +1,103 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Admin Panel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
+<div class="col-md-12">
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="navb">
+      <a class="navbar-brand" href="">Word Game</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/game">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/panel">Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+<div class="container">
 
-<h2>Welcome to the Admin Panel</h2>
+          <h2>Welcome to the Admin Panel</h2>
 
+          <!-- Add Word Form -->
+          <form method="post" action="/panel/addWord">
+            <label for="word">Word:</label>
+            <input type="text" id="word" name="word" required>
+            <label for="hint">Hints:</label>
+            <input type="text" id="hint" name="hint" required>
+            <label for="level">Level:</label>
+            <select id="level" name="level" required>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select><br>
+            <button type="submit" >Add Word</button>
+          </form><br>
 
-<!-- Add Word Form -->
-<form method="post" action="/panel/addWord">
-  <label for="word">Word:</label>
-  <input type="text" id="word" name="word" required>
-  <label for="hints">Hints:</label>
-  <input type="text" id="hints" name="hints" required>
-  <label for="level">Level:</label>
-  <select id="level" name="level" required>
-    <option value="easy">Easy</option>
-    <option value="medium">Medium</option>
-    <option value="difficult">Difficult</option>
-  </select>
-  <button type="submit">Add Word</button>
-</form>
+          <!-- Word List -->
+          <table border="1">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Word</th>
+              <th>Hint</th>
+              <th>Level</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Display Words from the Database -->
+            <tr th:each="word : ${words}">
+              <td th:text="${word.id}"></td>
+              <td th:text="${word.word}"></td>
+              <td th:text="${word.hint}"></td>
+              <td th:text="${word.level}"></td>
+            </tr>
+            </tbody>
+          </table>
 
-
-<!-- Word List -->
-<table border="1">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Word</th>
-    <th>Hints</th>
-    <th>Level</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <!-- Display Words from the Database -->
-  <tr th:each="word : ${words}">
-    <td th:text="${word.id}"></td>
-    <td th:text="${word.word}"></td>
-    <td th:text="${word.hints}"></td>
-    <td th:text="${word.level}"></td>
-    <td>
-      <a th:href="@{'/panel/words/' + ${word.id}}">View</a>
-      <a th:href="@{'/panel/updateWord/' + ${word.id}}">Edit</a>
-      <a th:href="@{'/panel/deleteWord/' + ${word.id}}">Delete</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
-
-<!-- Update Word Form -->
-<form method="post" action="/panel/updateWord">
-  <label for="updateWordId">Word ID to Update:</label>
-  <input type="number" id="updateWordId" name="updateWordId" required>
-  <label for="newWord">New Word:</label>
-  <input type="text" id="newWord" name="newWord" required>
-  <label for="newHints">New Hints:</label>
-  <input type="text" id="newHints" name="newHints" required>
-  <label for="newLevel">New Level:</label>
-  <select id="newLevel" name="newLevel" required>
-    <option value="easy">Easy</option>
-    <option value="medium">Medium</option>
-    <option value="difficult">Difficult</option>
-  </select>
-  <button type="submit">Update Word</button>
-</form>
+          <!-- Update Word Form -->
+          <form method="post" action="/panel/updateWord">
+            <label for="updateWordId">Word ID to Update:</label>
+            <input type="number" id="updateWordId" name="updateWordId">
+            <label for="newWord">New Word:</label>
+            <input type="text" id="newWord" name="newWord" required>
+            <label for="newHint">New Hints:</label>
+            <input type="text" id="newHint" name="newHint" required>
+            <label for="newLevel">New Level:</label>
+            <select id="newLevel" name="newLevel" required>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select><br>
+            <button type="submit">Update Word</button>
+          </form>
 
 <!-- Delete Word Form -->
-<form method="post" action="/panel/deleteWord">
-  <label for="deleteWordId">Word ID to Delete:</label>
-  <input type="number" id="deleteWordId" name="deleteWordId" required>
-  <button type="submit">Delete Word</button>
-</form>
+          <form method="post" action="/panel/deleteWord">
+            <label for="deleteWordId">Word ID to Delete:</label>
+            <input type="number" id="deleteWordId" name="deleteWordId" required><br>
+            <button type="submit">Delete Word</button>
+          </form>
 
-<!-- Other Content for the Admin Panel -->
-
+     </div>
+<footer class="navbar navbar-dark bg-white text-dark text-center py-3 mt-4 fixed-bottom">
+  <p> Developed by Hamenjeet Kaur &copy; 2024 </p>
+</footer>
 </body>
 </html>
