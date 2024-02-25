@@ -34,39 +34,57 @@ public class WordController {
     }
 
     @GetMapping("/panel/words")
-    public String showWords(Model model) {
-        List<Word> words = wordRepository.findAll();
-        model.addAttribute("words", words);
-        return "panel";
+    public String showWords(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmail().equals("admin@gmail.com") && user.getPassword().equals("admin123")) {
+            List<Word> words = wordRepository.findAll();
+            model.addAttribute("words", words);
+            return "panel";
+        } else {
+            return "redirect:/login";
+        }
     }
 
-
     @PostMapping("/panel/addWord")
-    public String addWord(@RequestParam String word, @RequestParam String hint, @RequestParam String level) {
-        Word newWord = new Word();
-        newWord.setWord(word);
-        newWord.setHint(hint);
-        newWord.setLevel(level);
-        wordRepository.save(newWord);
+    public String addWord(@RequestParam String word, @RequestParam String hint, @RequestParam String level, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmail().equals("admin@gmail.com") && user.getPassword().equals("admin123")) {
+            Word newWord = new Word();
+            newWord.setWord(word);
+            newWord.setHint(hint);
+            newWord.setLevel(level);
+            wordRepository.save(newWord);
+        } else {
+            return "redirect:/login";
+        }
         return "redirect:/panel/words";
     }
 
-
     @PostMapping("/panel/updateWord")
-    public String updateWord(@RequestParam Long updateWordId, @RequestParam String newWord, @RequestParam String newHint, @RequestParam String newLevel) {
-        Word existingWord = wordRepository.findById(updateWordId).orElse(null);
-        if (existingWord != null) {
-            existingWord.setWord(newWord);
-            existingWord.setHint(newHint);
-            existingWord.setLevel(newLevel);
-            wordRepository.save(existingWord);
+    public String updateWord(@RequestParam Long updateWordId, @RequestParam String newWord, @RequestParam String newHint, @RequestParam String newLevel, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmail().equals("admin@gmail.com") && user.getPassword().equals("admin123")) {
+            Word existingWord = wordRepository.findById(updateWordId).orElse(null);
+            if (existingWord != null) {
+                existingWord.setWord(newWord);
+                existingWord.setHint(newHint);
+                existingWord.setLevel(newLevel);
+                wordRepository.save(existingWord);
+            }
+        } else {
+            return "redirect:/login";
         }
         return "redirect:/panel/words";
     }
 
     @PostMapping("/panel/deleteWord")
-    public String deleteWord(@RequestParam Long deleteWordId) {
-        wordRepository.deleteById(deleteWordId);
+    public String deleteWord(@RequestParam Long deleteWordId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmail().equals("admin@gmail.com") && user.getPassword().equals("admin123")) {
+            wordRepository.deleteById(deleteWordId);
+        } else {
+            return "redirect:/login";
+        }
         return "redirect:/panel/words";
     }
 

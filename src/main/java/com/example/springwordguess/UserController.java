@@ -43,14 +43,12 @@ public class UserController {
 
         return "wordForm";
     }
-
-
     @GetMapping("/panel")
     public String showPanel(HttpSession session) {
         // Check if the user is logged in
         User user = (User) session.getAttribute("user");
         if (user != null && user.getEmail().equals("admin@gmail.com") && user.getPassword().equals("admin123")) {
-            return "panel";
+            return "redirect:/panel/words";
         } else {
             return "redirect:/login";
         }
